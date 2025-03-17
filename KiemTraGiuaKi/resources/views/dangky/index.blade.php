@@ -9,13 +9,32 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <div class="card mb-3">
+    <div class="card-body d-flex align-items-center">
+        <!-- Hiển thị ảnh sinh viên -->
+        <img src="{{ asset('images/' . basename($sinhvien->Hinh)) }}" alt="Ảnh Đại Diện" 
+             class="rounded-circle me-3" width="80" height="80" >
+
+        <div>
+            <h5>👨‍🎓 Thông Tin Sinh Viên</h5>
+            <p><strong>Mã SV:</strong> {{ $sinhvien->MaSV }}</p>
+            <p><strong>Họ Tên:</strong> {{ $sinhvien->HoTen }}</p>
+
+            <!-- Giải mã JSON trước khi hiển thị -->
+            @php
+                $nganhHoc = json_decode($sinhvien->NganhHoc, true);
+            @endphp
+            <p><strong>Ngành Học:</strong> {{ $nganhHoc['TenNganh'] ?? 'Không xác định' }}</p>
+        </div>
+    </div>
+</div>
+
     <!-- Thêm tổng số học phần và tổng số tín chỉ -->
     <div class="alert alert-info">
         <strong>📊 Tổng số học phần: {{ $hocphans->count() }} </strong> |
         <strong>🎓 Tổng số tín chỉ: {{ $hocphans->sum('SoTinChi') }}</strong>
     </div>
 
-    <!-- Nút Xóa Tất Cả -->
     @if($hocphans->count() > 0)
     <form action="{{ route('dangky.destroyAll') }}" method="POST" class="mb-3">
         @csrf @method('DELETE')
@@ -23,8 +42,6 @@
             🗑 Xóa Tất Cả
         </button>
     </form>
-
-    
     @endif
 
     <table class="table table-bordered">
@@ -56,5 +73,15 @@
     </table>
 
     {{ $hocphans->links() }}
+
+    @if($hocphans->count() > 0)
+        <form action="{{ route('dangky.luu') }}" method="POST">
+            @csrf
+            @foreach($hocphans as $hp)
+                <input type="hidden" name="hocphan_ids[]" value="{{ $hp->MaHP }}">
+            @endforeach
+            <button type="submit" class="btn btn-success">💾 Lưu Đăng Ký</button>
+        </form>
+    @endif
 </div>
 @endsection

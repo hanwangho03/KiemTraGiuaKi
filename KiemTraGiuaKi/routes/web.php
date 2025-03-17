@@ -38,5 +38,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('/dangky/{MaHP}', [DangKyController::class, 'destroy'])->name('dangky.destroy');
     Route::delete('/dangky/xoa-tat-ca', [DangKyController::class, 'destroyAll'])->name('dangky.destroyAll');
+    Route::post('/dangky/luu', [DangKyController::class, 'luuDangKy'])->name('dangky.luu');
 
 });
